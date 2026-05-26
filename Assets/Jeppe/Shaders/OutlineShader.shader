@@ -2,16 +2,18 @@ Shader "Custom/OutlineShader"
 {
     Properties
     {
-        [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
-        [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
+        _OutlineColor ("Outline Color", Color) = (0,0,0,1)
+        _OutlineThickness ("Thickness", Float) = 0.03
     }
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags { "RenderType"="Opaque" }
 
         Pass
         {
+            Cull Front
+            
             HLSLPROGRAM
 
             #pragma vertex vert
@@ -22,36 +24,35 @@ Shader "Custom/OutlineShader"
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float2 uv : TEXCOORD0;
+                float3 normalOS : NORMAL;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
             };
 
-            TEXTURE2D(_BaseMap);
-            SAMPLER(sampler_BaseMap);
-
-            CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
-                float4 _BaseMap_ST;
-            CBUFFER_END
+            float _OutlineThickness;
+            float4 _OutlineColor;
 
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
+
+                float3 pos =
+                    IN.positionOS.xyz +
+                    IN.normalOS * _OutlineThickness;
+
+                OUT.positionHCS = TransformObjectToHClip(pos);
+
                 return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
-                return color;
+                return _OutlineColor;
             }
+
             ENDHLSL
         }
     }

@@ -2,8 +2,10 @@ Shader "Custom/ToonShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _Threshold ("Threshold", Range(0,1)) = 0.5
+        _MainTex ("Texture", 2D) = "white" {}
+        _Tint ("Tint Color", Color) = (1,1,1,1)
+        _ShadowTint ("Shadow Tint", Color) = (0.3,0.3,0.3,1)
+        _Threshold ("Light Threshold", Range(0,1)) = 0.5
     }
 
     SubShader
@@ -19,19 +21,25 @@ Shader "Custom/ToonShader"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
             struct Attributes
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
+                float2 uv : TEXCOORD0;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
                 float3 normalWS : TEXCOORD0;
+                float2 uv : TEXCOORD1;
             };
 
-            float4 _Color;
+            float4 _Tint;
+            float4 _ShadowTint;
             float _Threshold;
 
             Varyings vert(Attributes IN)
@@ -40,25 +48,28 @@ Shader "Custom/ToonShader"
 
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
+                OUT.uv = IN.uv;
 
                 return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
-{
-    float3 lightDir = normalize(_MainLightPosition.xyz);
+            {
+                float3 lightDir = normalize(_MainLightPosition.xyz);
 
-    float NdotL = dot(normalize(IN.normalWS), lightDir);
+                float NdotL = dot(normalize(IN.normalWS), lightDir);
 
-    float light = step(_Threshold, NdotL);
+                float light = step(_Threshold, NdotL);
 
-    float3 baseColor = float3(1, 0.8, 0.5); // varm Borderlands farve
-    float3 shadowColor = float3(0.2, 0.15, 0.1);
+                float4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
 
-    float3 color = lerp(shadowColor, baseColor, light);
+                float3 baseColor = tex.rgb * _Tint.rgb;
+                float3 shadowColor = baseColor * _ShadowTint.rgb;
 
-    return float4(color, 1);
-}
+                float3 finalColor = lerp(shadowColor, baseColor, light);
+
+                return float4(finalColor, 1);
+            }
 
             ENDHLSL
         }

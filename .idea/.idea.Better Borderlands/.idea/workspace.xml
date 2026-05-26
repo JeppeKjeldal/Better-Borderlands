@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="76d7b46d-51d0-4d6c-90ea-d717da23837b" name="Changes" comment="" />
+    <list default="true" id="76d7b46d-51d0-4d6c-90ea-d717da23837b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Better Borderlands/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Better Borderlands/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Jeppe/Materials/M_Toon.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Jeppe/Materials/M_Toon.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Jeppe/Scenes/JeppeScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Jeppe/Scenes/JeppeScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Jeppe/Shaders/OutlineShader.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Jeppe/Shaders/OutlineShader.shader" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Jeppe/Shaders/Toonshader.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Jeppe/Shaders/Toonshader.shader" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1779794535929</updated>
-      <workItem from="1779794540052" duration="376000" />
+      <workItem from="1779794540052" duration="957000" />
     </task>
     <servers />
   </component>

@@ -101,8 +101,9 @@ Material:
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
-    - _AlphaNoiseStrength: 0.093
+    - _AlphaNoiseStrength: 0.229
     - _AlphaToMask: 0
+    - _BillboardScale: 6.16
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Brightness: 22.6
@@ -120,9 +121,9 @@ Material:
     - _EdgeNoiseStrength: 1
     - _EmissionStrength: 526.63
     - _EnvironmentReflections: 1
-    - _FadeEnd: 0.939
-    - _FadeStart: 0.726
-    - _FireScrollSpeed: 0.72
+    - _FadeEnd: 0.813
+    - _FadeStart: 0.622
+    - _FireScrollSpeed: 1
     - _FireSpeed: 0.69
     - _FireThreshold: 0.14
     - _GlossMapScale: 0

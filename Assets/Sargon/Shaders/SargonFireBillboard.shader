@@ -13,6 +13,7 @@ Shader "Custom/SargonFireBillboard"
         _Brightness("Brightness", Float) = 2.0
         _EdgeNoiseStrength("Edge Noise Strength", Range(0,1)) = 0.2
         _AlphaNoiseStrength("Alpha Noise Strength", Range(0,1)) = 0.15
+        _BillboardScale("Billboard Scale", Float) = 1.0 //Use this to scale the flames
     }
 
     SubShader
@@ -36,6 +37,7 @@ Shader "Custom/SargonFireBillboard"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            
 
             struct Attributes
             {
@@ -63,13 +65,31 @@ Shader "Custom/SargonFireBillboard"
                 float _Brightness;
                 float _EdgeNoiseStrength;
                 float _AlphaNoiseStrength;
+                float _BillboardScale;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+
+                float3 worldPos = TransformObjectToWorld(float3(0,0,0));
+
+                float3 cameraPos = GetCameraPositionWS();
+
+                float3 forward = normalize(cameraPos - worldPos);
+
+                float3 right = normalize(cross(float3(0,1,0), forward));
+                float3 up = cross(forward, right);
+                
+                float3 local = IN.positionOS.xyz * _BillboardScale;
+
+                float3 billboard =
+                    worldPos +
+                    (right * local.x + up * local.y);
+
+                OUT.positionHCS = TransformWorldToHClip(billboard);
                 OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
+
                 return OUT;
             }
 

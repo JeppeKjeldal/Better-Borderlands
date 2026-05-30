@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLAMESENABLED_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -36,6 +37,7 @@ Material:
     - _EmissionStrength: 170.8
     - _FireSpeed: 1
     - _FireThreshold: 0.027
+    - _FlamesEnabled: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.6837175, b: 0.35534585, a: 1}
     - _FireColor: {r: 1, g: 0.39999998, b: 0, a: 1}

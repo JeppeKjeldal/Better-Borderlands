@@ -101,7 +101,7 @@ Material:
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
-    - _AlphaNoiseStrength: 0.229
+    - _AlphaNoiseStrength: 0.294
     - _AlphaToMask: 0
     - _BillboardScale: 6.16
     - _Blend: 0
@@ -118,7 +118,7 @@ Material:
     - _DstBlendAlpha: 0
     - _EdgeFadeEnd: 0.403
     - _EdgeFadeStart: 0
-    - _EdgeNoiseStrength: 1
+    - _EdgeNoiseStrength: 0.942
     - _EmissionStrength: 526.63
     - _EnvironmentReflections: 1
     - _FadeEnd: 0.813

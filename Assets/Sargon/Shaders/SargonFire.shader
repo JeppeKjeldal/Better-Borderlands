@@ -11,6 +11,8 @@ Shader "Custom/SargonFire"
         _FireSpeed("Fire Scroll Speed", Float) = 1.0
         _FireThreshold("Fire Threshold", Range(0,1)) = 0.6
         _EmissionStrength("Emission Strength", Float) = 3.0
+        
+        [Toggle] _FlamesEnabled("Flames Enabled", Float) = 1
     }
 
     SubShader
@@ -58,6 +60,8 @@ Shader "Custom/SargonFire"
                 float _FireSpeed;
                 float _FireThreshold;
                 float _EmissionStrength;
+            
+                float _FlamesEnabled;
 
             CBUFFER_END
 
@@ -104,13 +108,15 @@ Shader "Custom/SargonFire"
                     fireMask
                     * fireNoise
                     * _FireColor.rgb
-                    * _EmissionStrength;
+                    * _EmissionStrength
+                    * _FlamesEnabled;
 
                 // Final color
                 half3 finalColor =
                     baseColor.rgb + fireEmission;
 
                 return half4(finalColor, baseColor.a);
+                
             }
 
             ENDHLSL

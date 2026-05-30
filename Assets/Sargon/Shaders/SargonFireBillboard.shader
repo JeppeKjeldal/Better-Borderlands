@@ -14,6 +14,8 @@ Shader "Custom/SargonFireBillboard"
         _EdgeNoiseStrength("Edge Noise Strength", Range(0,1)) = 0.2
         _AlphaNoiseStrength("Alpha Noise Strength", Range(0,1)) = 0.15
         _BillboardScale("Billboard Scale", Float) = 1.0 //Use this to scale the flames
+        
+        [Toggle] _FlamesEnabled("Flames Enabled", Float) = 1
     }
 
     SubShader
@@ -66,6 +68,7 @@ Shader "Custom/SargonFireBillboard"
                 float _EdgeNoiseStrength;
                 float _AlphaNoiseStrength;
                 float _BillboardScale;
+                float _FlamesEnabled;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
@@ -131,6 +134,7 @@ Shader "Custom/SargonFireBillboard"
                 
                 color.a *= edgeFade;
                 color.rgb *= _Brightness;
+                color.a *= _FlamesEnabled;
 
                 return color;
             }

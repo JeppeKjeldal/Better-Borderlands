@@ -1,16 +1,16 @@
-Shader "Custom/ToonOutlineFire"
+Shader "Custom/BorderlandsToonFire"
 {
     Properties
     {
         // Toon
         _MainTex ("Texture", 2D) = "white" {}
-        _Tint ("Tint", Color) = (1,1,1,1)
+        _Tint ("Tint Color", Color) = (1,1,1,1)
         _ShadowTint ("Shadow Tint", Color) = (0.3,0.3,0.3,1)
-        _Threshold ("Threshold", Range(0,1)) = 0.5
+        _Threshold ("Light Threshold", Range(0,1)) = 0.5
 
         // Outline
         _OutlineColor ("Outline Color", Color) = (0,0,0,1)
-        _OutlineThickness ("Outline Thickness", Float) = 0.02
+        _OutlineThickness ("Thickness", Float) = 0.03
 
         // Fire
         _FireNoise("Fire Noise", 2D) = "white" {}
@@ -31,15 +31,81 @@ Shader "Custom/ToonOutlineFire"
             "RenderPipeline"="UniversalPipeline"
         }
 
-        // =====================================================
-        // PASS 1 - TOON + FIRE
-        // =====================================================
+        // ==========================================
+        // OUTLINE PASS
+        // ==========================================
         Pass
         {
+            Name "Outline"
+
+            Tags
+            {
+                "LightMode" = "SRPDefaultUnlit"
+            }
+
+            Cull Front
+
             HLSLPROGRAM
 
-            #pragma vertex vert
-            #pragma fragment frag
+            #pragma vertex vertOutline
+            #pragma fragment fragOutline
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct AttributesOutline
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+            };
+
+            struct VaryingsOutline
+            {
+                float4 positionHCS : SV_POSITION;
+            };
+
+            float _OutlineThickness;
+            float4 _OutlineColor;
+
+            VaryingsOutline vertOutline(AttributesOutline IN)
+            {
+                VaryingsOutline OUT;
+
+                float3 pos =
+                    IN.positionOS.xyz +
+                    IN.normalOS * _OutlineThickness;
+
+                OUT.positionHCS =
+                    TransformObjectToHClip(pos);
+
+                return OUT;
+            }
+
+            half4 fragOutline(VaryingsOutline IN) : SV_Target
+            {
+                return _OutlineColor;
+            }
+
+            ENDHLSL
+        }
+
+        // ==========================================
+        // TOON + FIRE PASS
+        // ==========================================
+        Pass
+        {
+            Name "Toon"
+
+            Tags
+            {
+                "LightMode" = "UniversalForward"
+            }
+
+            Cull Back
+
+            HLSLPROGRAM
+
+            #pragma vertex vertToon
+            #pragma fragment fragToon
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -49,14 +115,14 @@ Shader "Custom/ToonOutlineFire"
             TEXTURE2D(_FireNoise);
             SAMPLER(sampler_FireNoise);
 
-            struct Attributes
+            struct AttributesToon
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
             };
 
-            struct Varyings
+            struct VaryingsToon
             {
                 float4 positionHCS : SV_POSITION;
                 float3 normalWS : TEXCOORD0;
@@ -78,9 +144,9 @@ Shader "Custom/ToonOutlineFire"
 
             CBUFFER_END
 
-            Varyings vert(Attributes IN)
+            VaryingsToon vertToon(AttributesToon IN)
             {
-                Varyings OUT;
+                VaryingsToon OUT;
 
                 OUT.positionHCS =
                     TransformObjectToHClip(IN.positionOS.xyz);
@@ -93,11 +159,11 @@ Shader "Custom/ToonOutlineFire"
                 return OUT;
             }
 
-            half4 frag(Varyings IN) : SV_Target
+            half4 fragToon(VaryingsToon IN) : SV_Target
             {
-                // =====================================
+                // ============================
                 // TOON SHADING
-                // =====================================
+                // ============================
 
                 float3 lightDir =
                     normalize(_MainLightPosition.xyz);
@@ -122,11 +188,15 @@ Shader "Custom/ToonOutlineFire"
                     baseColor * _ShadowTint.rgb;
 
                 float3 toonColor =
-                    lerp(shadowColor, baseColor, light);
+                    lerp(
+                        shadowColor,
+                        baseColor,
+                        light
+                    );
 
-                // =====================================
-                // FIRE
-                // =====================================
+                // ============================
+                // FIRE OVERLAY
+                // ============================
 
                 float heightMask = IN.uv.y;
 
@@ -156,67 +226,15 @@ Shader "Custom/ToonOutlineFire"
                     * _EmissionStrength
                     * _FlamesEnabled;
 
-                // =====================================
+                // ============================
                 // FINAL
-                // =====================================
+                // ============================
 
                 float3 finalColor =
-                    toonColor
-                    + fireEmission;
+                    toonColor +
+                    fireEmission;
 
                 return float4(finalColor, 1);
-            }
-
-            ENDHLSL
-        }
-
-        // =====================================================
-        // PASS 2 - OUTLINE
-        // =====================================================
-        Pass
-        {
-            Cull Front
-            ZWrite Off
-            ZTest LEqual
-
-            HLSLPROGRAM
-
-            #pragma vertex vertOutline
-            #pragma fragment fragOutline
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            struct Attributes
-            {
-                float4 positionOS : POSITION;
-                float3 normalOS : NORMAL;
-            };
-
-            struct Varyings
-            {
-                float4 positionHCS : SV_POSITION;
-            };
-
-            float _OutlineThickness;
-            float4 _OutlineColor;
-
-            Varyings vertOutline(Attributes IN)
-            {
-                Varyings OUT;
-
-                float3 pos =
-                    IN.positionOS.xyz *
-                    (1 + _OutlineThickness);
-
-                OUT.positionHCS =
-                    TransformObjectToHClip(pos);
-
-                return OUT;
-            }
-
-            half4 fragOutline(Varyings IN) : SV_Target
-            {
-                return _OutlineColor;
             }
 
             ENDHLSL

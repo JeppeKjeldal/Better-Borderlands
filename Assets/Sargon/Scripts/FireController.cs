@@ -54,8 +54,11 @@ public class FireController : MonoBehaviour
     }
     private void ApplySettings()
     {
-        // Sphere
         float enabled = isBurning ? 1f : 0f;
+        Shader.SetGlobalFloat("_FireIntensity", isBurning ? 1f : 0f);
+        // Shader.SetGlobalFloat("_FireIntensity", enabled);
+        
+        // Sphere
         objectRenderer.material.SetFloat("_FlamesEnabled", enabled);
         objectRenderer.material.SetFloat("_FireSpeed", fireSpeed);
         objectRenderer.material.SetFloat("_FireThreshold", fireThreshold);

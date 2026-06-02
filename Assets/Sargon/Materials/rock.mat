@@ -8,11 +8,12 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: rock
-  m_Shader: {fileID: 4800000, guid: 81ae301405080c94ebd603aea38eeabd, type: 3}
+  m_Shader: {fileID: 4800000, guid: fa0615d80d5a45945a4c69107e999040, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLAMESENABLED_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -31,13 +32,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _EmissionStrength: 3
     - _FireSpeed: 1
-    - _FireThreshold: 0.6
+    - _FireThreshold: 0.933
+    - _FlamesEnabled: 1
+    - _OutlineThickness: 0.03
+    - _Threshold: 0.5
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _FireColor: {r: 1, g: 0.39999998, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowTint: {r: 0.29999998, g: 0.29999998, b: 0.29999998, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
